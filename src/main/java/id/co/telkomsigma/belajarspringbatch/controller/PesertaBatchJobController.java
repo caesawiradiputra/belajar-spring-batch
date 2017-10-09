@@ -13,6 +13,7 @@ import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -36,6 +37,21 @@ public class PesertaBatchJobController {
         try {
             JobParameters parameter = new JobParametersBuilder()
                     .addString("JobId", "2")
+                    .toJobParameters();
+            jobLauncher.run(importDataPesertaFromCsvFile, parameter);
+        } catch (Exception e) {
+            logger.error("Error Launch importDataPesertaFromCsvFile : ", e.getMessage(), e);
+            return "Error Launch importDataPesertaFromCsvFile : " + e.getMessage();
+        }
+        return "Job Done";
+    }
+
+    @GetMapping("/runPesertaBatchJob/{id}")
+    public String runPesertaBatchJob(@PathVariable("id") String s) {
+        logger.info("runPesertaBatchJob");
+        try {
+            JobParameters parameter = new JobParametersBuilder()
+                    .addString("JobId", s.toString())
                     .toJobParameters();
             jobLauncher.run(importDataPesertaFromCsvFile, parameter);
         } catch (Exception e) {
