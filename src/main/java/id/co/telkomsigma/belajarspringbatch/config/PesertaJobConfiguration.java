@@ -8,6 +8,7 @@ package id.co.telkomsigma.belajarspringbatch.config;
 import id.co.telkomsigma.belajarspringbatch.domain.Peserta;
 import id.co.telkomsigma.belajarspringbatch.mapper.PesertaMapper;
 import id.co.telkomsigma.belajarspringbatch.processor.PesertaItemProcessor;
+import id.co.telkomsigma.belajarspringbatch.tasklet.DeletePesertaCsvTasklet;
 import id.co.telkomsigma.belajarspringbatch.writter.PesertaItemWritter;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -40,6 +41,9 @@ public class PesertaJobConfiguration {
     
     @Autowired
     public PesertaItemProcessor itemProcessor;
+    
+    @Autowired
+    public DeletePesertaCsvTasklet deleteCsvTasklet;
 
     @Bean
     public FlatFileItemReader<Peserta> reader() {
@@ -75,6 +79,7 @@ public class PesertaJobConfiguration {
         return jobBuilderFactory.get("importDataPesertaFromCsvJob")
                 .incrementer(new RunIdIncrementer())
                 .flow(step1())
+                    .next(step2())
                 .end()
                 .build();          
                 
@@ -89,5 +94,12 @@ public class PesertaJobConfiguration {
                 .writer(itemWritter)
                 .build();
                 
+    }
+    
+    @Bean
+    public Step step2(){
+        return stepBuilderFactory.get("step2")
+                .tasklet(deleteCsvTasklet)
+                .build();
     }
 }
