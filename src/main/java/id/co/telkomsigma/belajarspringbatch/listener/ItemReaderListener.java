@@ -5,6 +5,7 @@
  */
 package id.co.telkomsigma.belajarspringbatch.listener;
 
+import id.co.telkomsigma.belajarspringbatch.domain.Peserta;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.annotation.AfterRead;
@@ -26,14 +27,14 @@ public class ItemReaderListener {
     }
     
     @AfterRead
-    public void afterRead(){
-        logger.info("Interceptor setelah baca file");
+    public void afterRead(Peserta p){
+        logger.info("Interceptor setelah baca file : {}", p );
         
     }
     
     @OnReadError
-    public void onReadError(){
-        logger.info("Interceptor error saat baca file");
+    public void onReadError(Exception ex){
+        logger.error("Interceptor error saat baca file : {}", ex.getMessage());
         
     }
     

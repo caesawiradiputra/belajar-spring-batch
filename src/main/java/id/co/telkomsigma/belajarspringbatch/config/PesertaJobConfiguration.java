@@ -6,6 +6,7 @@
 package id.co.telkomsigma.belajarspringbatch.config;
 
 import id.co.telkomsigma.belajarspringbatch.domain.Peserta;
+import id.co.telkomsigma.belajarspringbatch.listener.CustomSkipListener;
 import id.co.telkomsigma.belajarspringbatch.listener.ItemReaderListener;
 import id.co.telkomsigma.belajarspringbatch.listener.SkipCheckingListener;
 import id.co.telkomsigma.belajarspringbatch.mapper.PesertaMapper;
@@ -53,6 +54,9 @@ public class PesertaJobConfiguration {
     
     @Autowired
     public ItemReaderListener itemReaderListener;
+    
+    @Autowired
+    public CustomSkipListener customSkipListener;
 
     @Bean
     public FlatFileItemReader<Peserta> reader() {
@@ -106,6 +110,7 @@ public class PesertaJobConfiguration {
                     .skipLimit(1)
                 .listener(skipChecking)
                 .listener(itemReaderListener)
+                .listener(customSkipListener)
                 .build();
                 
     }
