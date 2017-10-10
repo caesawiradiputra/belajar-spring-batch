@@ -64,5 +64,10 @@ public class Peserta {
         this.tanggalLahir = tanggalLahir;
     }
     
+    @Override
+    public String toString(){
+        return "Peserta{" + "id=" + id + ", nama=" + nama + ", alamat=" + alamat + ", tanggalLahir=" + tanggalLahir + '}';
+    }
+    
     
 }
