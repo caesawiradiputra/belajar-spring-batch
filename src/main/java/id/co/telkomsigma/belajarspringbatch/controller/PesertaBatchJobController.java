@@ -12,6 +12,7 @@ import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +28,12 @@ public class PesertaBatchJobController {
     private JobLauncher jobLauncher;
 
     @Autowired
-    private Job importDataPesertaFromCsvFile;
+    @Qualifier("importDataPesertaFromCsvJob")
+    private Job importDataPesertaFromCsvJob;
+    
+    @Autowired
+    @Qualifier("exportPesertaJob")
+    private Job exportPesertaJob;
 
     Logger logger = LoggerFactory.getLogger(PesertaBatchJobController.class);
 
@@ -38,10 +44,10 @@ public class PesertaBatchJobController {
             JobParameters parameter = new JobParametersBuilder()
                     .addString("JobId", "2")
                     .toJobParameters();
-            jobLauncher.run(importDataPesertaFromCsvFile, parameter);
+            jobLauncher.run(importDataPesertaFromCsvJob, parameter);
         } catch (Exception e) {
-            logger.error("Error Launch importDataPesertaFromCsvFile : ", e.getMessage(), e);
-            return "Error Launch importDataPesertaFromCsvFile : " + e.getMessage();
+            logger.error("Error Launch importDataPesertaFromCsvJob : ", e.getMessage(), e);
+            return "Error Launch importDataPesertaFromCsvJob : " + e.getMessage();
         }
         return "Job Done";
     }
@@ -51,13 +57,28 @@ public class PesertaBatchJobController {
         logger.info("runPesertaBatchJob");
         try {
             JobParameters parameter = new JobParametersBuilder()
-                    .addString("JobId", s.toString())
+                    .addString("JobId", s)
                     .toJobParameters();
-            jobLauncher.run(importDataPesertaFromCsvFile, parameter);
+            jobLauncher.run(importDataPesertaFromCsvJob, parameter);
         } catch (Exception e) {
-            logger.error("Error Launch importDataPesertaFromCsvFile : ", e.getMessage(), e);
-            return "Error Launch importDataPesertaFromCsvFile : " + e.getMessage();
+            logger.error("Error Launch importDataPesertaFromCsvJob : ", e.getMessage(), e);
+            return "Error Launch importDataPesertaFromCsvJob : " + e.getMessage();
         }
         return "Job Done";
+    }
+
+    @GetMapping("/runExportPesertaJob/{id}")
+    public String runExportPesertaJob(@PathVariable("id") String s) {
+        logger.info("runExportPesertaJob");
+        try {
+            JobParameters parameter = new JobParametersBuilder()
+                    .addString("JobId", s)
+                    .toJobParameters();
+            jobLauncher.run(exportPesertaJob, parameter);
+        } catch (Exception e) {
+            logger.error("Error Launch exportPesertaJob : ", e.getMessage(), e);
+            return "Error Launch exportPesertaJob : " + e.getMessage();
+        }
+        return "exportPesertaJob Done";
     }
 }
