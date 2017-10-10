@@ -30,7 +30,7 @@ public class PesertaItemWritter implements ItemWriter<Peserta>{
     PesertaDao pesertaDao;
     
 
-    @Value("#{jobParameters['id']}")
+    @Value("#{jobParameters['JobId']}")
     private String JobId;
 
     public String getJobId() {

@@ -21,10 +21,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class SampleTasklet2 implements Tasklet{
     Logger logger = LoggerFactory.getLogger(SampleTasklet2.class);
-    
+
     @Override
     public RepeatStatus execute(StepContribution sc, ChunkContext cc) throws Exception {
-        logger.info("Executing Step : Step 4");
-        return RepeatStatus.FINISHED;
+        logger.info("MENJALANKAN SampleTasklet2 !!");
+        return null;
     }
+    
 }

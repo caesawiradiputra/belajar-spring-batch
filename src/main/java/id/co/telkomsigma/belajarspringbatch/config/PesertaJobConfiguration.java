@@ -74,9 +74,6 @@ public class PesertaJobConfiguration {
 
     @Autowired
     private JobLauncher jobLauncher;
-
-    @Autowired
-    private Job importDataPesertaFromCsvFile;
     
     @Autowired
     public SampleTasklet sampleTasklet;
@@ -116,25 +113,38 @@ public class PesertaJobConfiguration {
     }
     
 //    @Scheduled(cron= "*/10 * * * * *")
-//    public void performJob(){
-//        logger.info("=============== JOB Berjalan pada {} ==================", new Date());
-//        try {
-//            JobParameters param = new JobParametersBuilder()
-//                    .addString("jobId", String.valueOf(System.currentTimeMillis()))
-//                    .toJobParameters();
-//            JobExecution execution = jobLauncher.run(importDataPesertaFromCsvFile, param);
-//            
-//        } catch (Exception e) {
-//            logger.error("ERROR Saat JOB Scheduler : {}", e.getMessage());
-//        }        
-//    }
+    public void performJob(){
+        logger.info("=============== JOB Berjalan pada {} ==================", new Date());
+        try {
+            JobParameters param = new JobParametersBuilder()
+                    .addString("jobId", String.valueOf(System.currentTimeMillis()))
+                    .toJobParameters();
+            JobExecution execution = jobLauncher.run(importDataPesertaFromCsvJob(), param);
+            
+        } catch (Exception e) {
+            logger.error("ERROR Saat JOB Scheduler : {}", e.getMessage());
+        }        
+    }
     
     @Bean
     public Job importDataPesertaFromCsvJob() {
         Flow splitFlow = new FlowBuilder<Flow>("subFlow")
                 .from(step3()).build();
-        Flow splitFlow2 = new FlowBuilder<Flow>("subFlow")
+        Flow splitFlow2 = new FlowBuilder<Flow>("subFlow2")
                 .from(step4()).build();
+        
+//        
+//        Flow paralelFlow = new FlowBuilder<Flow>("paralelFlow")
+//                .start(step1())
+//                .split(new SimpleAsyncTaskExecutor())
+//                .add(splitFlow2)
+//                .build();
+//        
+//        Flow paralelFlow2 = new FlowBuilder<Flow>("paralelFlow2")
+//                .start(paralelFlow)
+//                .next(splitFlow)
+//                .next(splitFlow2)
+//                .build();
         
         return jobBuilderFactory.get("importDataPesertaFromCsvJob")
                 .incrementer(new RunIdIncrementer())
